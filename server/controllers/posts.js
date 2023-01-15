@@ -2,7 +2,7 @@ import Post from "../models/postModel";
 import User from "../models/userModel";
 
 // CREATE
-const createPost = async () => {
+export const createPost = async () => {
     try {
         const { userId, description, picturePath } = req.body;
         const user = await User.findOne(userId);
