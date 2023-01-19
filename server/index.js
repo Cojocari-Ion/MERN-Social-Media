@@ -10,10 +10,14 @@ import path from "path";
 import authRoutes from './routes/auth.js';
 import userRoutes from './routes/users.js';
 import postRoutes from './routes/posts.js';
-import { register } from './controllers/posts.js'
-import { register } from './controllers/auth';
+import { createPost } from './controllers/posts.js';
+import { register } from './controllers/auth.js';
 import { fileURLToPath } from 'url';
 import { verifyToken } from './middleware/auth.js';
+import User from './models/userModel.js';
+import Post from './models/postModel.js';
+import { users } from './data/index.js';
+import { posts } from './data/index.js';
 
 // CONFIGURATIONS
 const __filename = fileURLToPath(import.meta.url);
@@ -50,11 +54,22 @@ app.use("/users", userRoutes);
 app.use("/posts", postRoutes);
 
 //Mongoose
-const  PORT = process.env.PORT || 6001;
-mongoose.connect(process.env.MONGO_URL, {
-    userNewUrlParse: true,
-    useUnifiedTopology: true,
-}).then(() => {
-    app.listen(PORT, () => console.log('Server port: ' + PORT))
-    .catch((err) => {console.log(err)});
+
+mongoose.set("strictQuery", true);
+mongoose.connect('mongodb+srv://ion_ion:Freestail1@cluster0.qwqa5qi.mongodb.net/SocialMedia?retryWrites=true&w=majority')
+.then(() => {
+    console.log("DB OK")
+    // ADD DATA ONE TIME
+    // User.insertMany(users);
+    // Post.insertMany(posts);
+})
+.catch((err) => {console.log("db error", err)});
+
+// Listen
+app.listen(4444, (err) => {
+    if(err) {
+        return console.log(err);
+    }
+
+    console.log('Server OK');
 });
